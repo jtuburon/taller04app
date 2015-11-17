@@ -1,0 +1,38 @@
+<div class="panel panel-default">
+    <div class="panel-heading">
+        <i class="fa fa-bar-chart-o fa-fw"></i> Preguntas de <a href="movies.stackexchange.com" >movies.stackexchange.com</a>
+    </div>
+    <div class="panel-body">
+        <ul class="timeline">
+            {% for q in questions_list %}
+            <li class="{% cycle '' 'timeline-inverted' %}">
+                <div class="timeline-badge {% cycle 'warning' 'info' %}"><i class="fa fa-check"></i></div>
+                <div class="timeline-panel">
+                    <div class="timeline-heading">
+                        <h4 class="timeline-title">{{q.title}}</h4>
+                        <p><small class="text-muted"><i class="fa fa-clock-o"></i>{{q.created_date}}</small>
+                        </p>
+                    </div>
+                    <div class="timeline-body">
+                        {{q.body|safe}}
+                    </div>
+                </div>
+            </li>
+            {% endfor %}
+            <!--li class="timeline-inverted">
+                <div class="timeline-badge warning"><i class="fa fa-credit-card"></i>
+                </div>
+                <div class="timeline-panel">
+                    <div class="timeline-heading">
+                        <h4 class="timeline-title">Lorem ipsum dolor</h4>
+                    </div>
+                    <div class="timeline-body">
+                        <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Autem dolorem quibusdam, tenetur commodi provident cumque magni voluptatem libero, quis rerum. Fugiat esse debitis optio, tempore. Animi officiis alias, officia repellendus.</p>
+                        <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Laudantium maiores odit qui est tempora eos, nostrum provident explicabo dignissimos debitis vel! Adipisci eius voluptates, ad aut recusandae minus eaque facere.</p>
+                    </div>
+                </div>
+            </li-->
+        </ul>
+    </div>
+</div>
+
