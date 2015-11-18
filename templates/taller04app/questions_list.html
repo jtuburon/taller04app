@@ -34,29 +34,32 @@
                 <div class="timeline-badge {% cycle 'warning' 'info' %}"><i class="fa fa-check"></i></div>
                 <div class="timeline-panel">
                     <div class="timeline-heading">
-                        <h4 class="timeline-title">{{q.title}}</h4>
-                        <p><small class="text-muted"><i class="fa fa-clock-o"></i>{{q.created_date}}</small>
+                        <p><small class="text-muted"><i class="fa fa-clock-o"></i>{{q.created_date}}</small> {{q.owner.display_name}}
                         </p>
+                        <h4 class="timeline-title"><a href="javascript:question_detail({{q.question_id}})">{{q.title}}</a></h4>
                     </div>
                     <div class="timeline-body">
-                        {{q.body|safe}}
+                        <p>{{q.answer_count}} answer(s)</p>
+                        <div id="{{q.question_id}}" class="tag-list">
+                            
+                        </div>
+                        <br>
+                        <script>
+                            $(function() {
+                                // If using Bootstrap 2, be sure to include:
+                                // Tags.bootstrapVersion = "2";
+                                $('#{{q.question_id}}').tags({
+                                    tagData: {{q.tags_array|safe}},
+                                    readOnly: true,
+                                    suggestions:["basic", "suggestions"],
+                                    excludeList:["not", "these", "words"]
+                                });
+                            });
+                        </script>
                     </div>
                 </div>
             </li>
             {% endfor %}
-            <!--li class="timeline-inverted">
-                <div class="timeline-badge warning"><i class="fa fa-credit-card"></i>
-                </div>
-                <div class="timeline-panel">
-                    <div class="timeline-heading">
-                        <h4 class="timeline-title">Lorem ipsum dolor</h4>
-                    </div>
-                    <div class="timeline-body">
-                        <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Autem dolorem quibusdam, tenetur commodi provident cumque magni voluptatem libero, quis rerum. Fugiat esse debitis optio, tempore. Animi officiis alias, officia repellendus.</p>
-                        <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Laudantium maiores odit qui est tempora eos, nostrum provident explicabo dignissimos debitis vel! Adipisci eius voluptates, ad aut recusandae minus eaque facere.</p>
-                    </div>
-                </div>
-            </li-->
         </ul>
     </div>
 </div>
