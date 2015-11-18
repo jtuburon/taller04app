@@ -7,6 +7,8 @@ from pymongo import MongoClient
 from bson.json_util import dumps
 from datetime import datetime
 
+from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
+
 MONGO_DB_USER= "bigdata7"
 MONGO_DB_PASSWD= "bigdata7"
 
@@ -25,7 +27,7 @@ def show_info(request):
 	context = {}
 	return render(request, 'taller04app/info_main.html', context)
 
-def questions_main(request):
+def questions_main(request, page):
 	client = MongoClient(MONGO_DB_HOST, MONGO_DB_PORT)
 	my_db = client[MONGO_DB_NAME]
 	
@@ -35,5 +37,14 @@ def questions_main(request):
 		q['created_date']= datetime.fromtimestamp(q['creation_date']).strftime('%Y-%m-%d %H:%M:%S')	
 		questions_list.append(q)
 
-	context = {"questions_list": questions_list}
+
+	paginator = Paginator(questions_list, 10) # Show 25 contacts per page
+
+	try:
+		questions = paginator.page(page)
+	except PageNotAnInteger:
+		questions = paginator.page(1)
+	except EmptyPage:
+		questions = paginator.page(paginator.num_pages)
+	context = {"questions_list": questions}
 	return render(request, 'taller04app/questions_main.html', context)

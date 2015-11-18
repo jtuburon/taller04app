@@ -2,6 +2,21 @@
     <div class="panel-heading">
         <i class="fa fa-bar-chart-o fa-fw"></i> Preguntas de <a href="movies.stackexchange.com" >movies.stackexchange.com</a>
     </div>
+    <div class="pagination">
+        <span class="step-links">
+            {% if questions_list.has_previous %}
+                <a href="javascript:questions_index({{ questions_list.previous_page_number }})">Previous</a>
+            {% endif %}
+
+            <span class="current">
+                Page {{ questions_list.number }} of {{ questions_list.paginator.num_pages }}.
+            </span>
+
+            {% if questions_list.has_next %}
+                <a href="javascript:questions_index({{ questions_list.next_page_number }})">Next</a>
+            {% endif %}
+        </span>
+    </div>
     <div class="panel-body">
         <ul class="timeline">
             {% for q in questions_list %}
