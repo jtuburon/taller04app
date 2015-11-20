@@ -1,6 +1,6 @@
 <div class="panel panel-default">
     <div class="panel-heading">
-        <h3 class="page-header">{{question.title}}</h3>
+        <h3 class="page-header">{{question.title|safe}}</h3>
 	    <p><small class="text-muted"><i class="fa fa-clock-o"></i>{{question.created_date}}</small> {{question.owner.display_name}}
 		</p>    
 		<p>{{question.answer_count}} answer(s)</p>
