@@ -38,11 +38,10 @@ def show_info(request):
 	return render(request, 'taller04app/info_main.html', context)
 
 def questions_main(request, page):
-	print type("mesa")
 	client = MongoClient(MONGO_DB_HOST, MONGO_DB_PORT)
 	my_db = client[MONGO_DB_NAME]
 	
-	questions_list=my_db.movies_questions.find();
+	questions_list=my_db.movies_questions.find().sort("creation_date", -1);
 	paginator = Paginator(questions_list, 10) # Show 25 contacts per page
 
 	try:
@@ -76,10 +75,11 @@ def question_detail(request, question_id):
 import re
 def highlight_entities(q):
 	words = generate_entities_dict(q);
-	regex= generate_pattern(words)
-	update_html(q, 'title', regex, words)
-	update_html(q, 'body', regex, words)
-	print	words
+	if words != None:
+		regex= generate_pattern(words)
+		update_html(q, 'title', regex, words)
+		update_html(q, 'body', regex, words)
+		update_html(q, 'answers', regex, words)
 
 def generate_entities_dict(q):
 	client = MongoClient(MONGO_DB_HOST, MONGO_DB_PORT)
@@ -88,36 +88,42 @@ def generate_entities_dict(q):
 
 	words = {}
 
-	for key in q_entities["title_entities"].keys():
-		for w in q_entities["title_entities"][key]:
-			words[w]= key 
+	if q_entities != None:	
+		for key in q_entities["title_entities"].keys():
+			for w in q_entities["title_entities"][key]:
+				words[w]= key 
 
-	for key in q_entities["body_entities"].keys():
-		for w in q_entities["body_entities"][key]:
-			words[w]= key 
+		for key in q_entities["body_entities"].keys():
+			for w in q_entities["body_entities"][key]:
+				words[w]= key 
 
-	# for a_o in q_entities["answers_entities"]:
-	# 	print a_o
-	# 	for key in a_o["entities"]:
-	# 		for w in a_o["entities"][key]:
-	# 			words[w]= key
-
-	return words
+		for a_o in q_entities["answers_entities"]:
+			for key in a_o["entities"]:
+				for w in a_o["entities"][key]:
+					words[w]= key
+		return words
+	else:
+		return None
 
 def update_html(q, attribute, regex, words):
-	text= q[attribute]
+	if attribute=="answers":
+		for a in q[attribute]:
+			text= a['body']
+			a['body']= update_text(text, regex, words)
+	else:
+		text= q[attribute]
+		q[attribute]= update_text(text, regex, words)
+
+def update_text(text, regex, words):
 	i = 0; 
 	output = ""
 	for m in regex.finditer(text):
 		output += "".join([text[i:m.start()], "<strong><span style='color: "+ colors[words[text[m.start():m.end()]]] + "'>", text[m.start():m.end()], "</span></strong>"])
 		i = m.end()
 	output+= text[i:]
-	q[attribute]= output
-	
+	return output
 
 def generate_pattern(words):
 	words_list = ["(\\b"+ x+ "\\b)" for x in words.keys()]
-	print words
 	regex= "|".join(words_list)
-	print regex
-	return re.compile(regex, re.I)
+	return re.compile(regex)
