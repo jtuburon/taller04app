@@ -1,39 +1,22 @@
 <div class="panel panel-default">
     <div class="panel-heading">
-        <h3 class="page-header">{{question.title|safe}}</h3>
-	    <p><small class="text-muted"><i class="fa fa-clock-o"></i>{{question.created_date}}</small> {{question.owner.display_name}}
-		</p>    
-		<p>{{question.answer_count}} answer(s)</p>
-        <div id="{{question.question_id}}" class="tag-list">
-        </div>
-        <br>
-        <script>
-            $(function() {
-                $('#{{question.question_id}}').tags({
-                    tagData: {{question.tags_array|safe}},
-                    readOnly: true,
-                    suggestions:["basic", "suggestions"],
-                    excludeList:["not", "these", "words"]
-                });
-            });
-        </script>
+        <i class="fa fa-bar-chart-o fa-fw"></i> NER Settings:
     </div>
-    <div class="panel-body">
-        {{question.body|safe}}
-    </div>
-    <div class="panel-heading">
-    	<i class="fa fa-bar-chart-o fa-fw"></i> Answers:
-   	</div>
-    <div class="panel-body">
-		{% for a in question.answers %}
-			<div>
-				<p><small class="text-muted"><i class="fa fa-clock-o"></i>{{a.created_date}}</small> {{a.owner.display_name}}
-				</p>
-				{{a.body|safe}}				
-			</div>
-			<br>
-			<br>
-		{% endfor %}
+     <div class="form-group">
+        <label for="ner">NER:</label>
+        <select id="ner" class="form-control">
+            <option value="0">None</option>
+            <option value="1">Stanford's NER</option>
+            <option value="2">Spotlight's NER</option>
+        </select>
     </div>
 </div>
-
+<script type="text/javascript">
+    $( "#ner").change(function() {
+        ner_id= $( this ).val();
+        refresh_question_info({{question.question_id}}, ner_id);
+    });
+</script>>
+<div id="question_info">
+    {% include "taller04app/question_detail_info.html" %}
+</div>

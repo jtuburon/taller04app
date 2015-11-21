@@ -36,7 +36,7 @@
                     <div class="timeline-heading">
                         <p><small class="text-muted"><i class="fa fa-clock-o"></i>{{q.created_date}}</small> {{q.owner.display_name}}
                         </p>
-                        <h4 class="timeline-title"><a href="javascript:question_detail({{q.question_id}})">{{q.title}}</a></h4>
+                        <h4 class="timeline-title"><a href="javascript:question_detail({{q.question_id}}, 0)">{{q.title}}</a></h4>
                     </div>
                     <div class="timeline-body">
                         <p>{{q.answer_count}} answer(s)</p>

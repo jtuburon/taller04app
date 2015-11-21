@@ -1,0 +1,40 @@
+
+<div class="panel panel-default">
+    <div class="panel-heading">
+        <h3 class="page-header">{{question.title|safe}}</h3>
+	    <p><small class="text-muted"><i class="fa fa-clock-o"></i>{{question.created_date}}</small> {{question.owner.display_name}}
+		</p>    
+		<p>{{question.answer_count}} answer(s)</p>
+        <div id="{{question.question_id}}" class="tag-list">
+        </div>
+        <br>
+        <script>
+            $(function(){
+                $('#{{question.question_id}}').tags({
+                    tagData: {{question.tags_array|safe}},
+                    readOnly: true,
+                    suggestions:["basic", "suggestions"],
+                    excludeList:["not", "these", "words"]
+                });
+            });
+        </script>
+    </div>
+    <div class="panel-body">
+        {{question.body|safe}}
+    </div>
+    <div class="panel-heading">
+    	<i class="fa fa-bar-chart-o fa-fw"></i> Answers:
+   	</div>
+    <div class="panel-body">
+		{% for a in question.answers %}
+			<div>
+				<p><small class="text-muted"><i class="fa fa-clock-o"></i>{{a.created_date}}</small> {{a.owner.display_name}}
+				</p>
+				{{a.body|safe}}				
+			</div>
+			<br>
+			<br>
+		{% endfor %}
+    </div>
+</div>
+
