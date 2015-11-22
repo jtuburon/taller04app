@@ -103,14 +103,40 @@ def get_spotlight_recognized_resources(q):
 	my_db = client[MONGO_DB_NAME]
 	q_res= my_db.questions_spotlight_resources.find_one({"question_id": q['question_id']})
 	update_html_with_spotlight_resources(q, 'title', q_res)
+	update_html_with_spotlight_resources(q, 'body', q_res)
+	update_html_with_spotlight_resources(q, 'answers', q_res)
 	
 
 def update_html_with_spotlight_resources(q, attribute, res):
-	if 'Resources' in res[attribute].keys():
-		offset_increase = 0
-		text= q[attribute]
-		for r in res[attribute]['Resources']:			
-			print r
+	if attribute in res.keys():
+		if attribute =="answers":
+			for a in res[attribute]:
+				answ= find_answer_object(q, a["answer_id"])
+				print answ
+				answ["body"]=generate_html_from_spotlight(answ, attribute, a)
+		else:
+			if 'Resources' in res[attribute].keys():
+				q[attribute]=generate_html_from_spotlight(q, attribute, res)
+
+def find_answer_object(q, answer_id):
+	for a in q["answers"]:
+		if a["answer_id"]== answer_id:
+			return a
+	return None
+
+
+def generate_html_from_spotlight(obj, attribute, res):
+	sources=None
+	if attribute=="answers":
+		text= obj["body"]
+		sources= res['Resources']
+	else:
+		text= obj[attribute]
+		sources= res[attribute]['Resources']
+	
+	offset_increase = 0
+	if sources != None:
+		for r in sources:			
 			entity= r["@surfaceForm"]
 			offset= int(r["@offset"]) + offset_increase
 			entity_uri= r["@URI"]
@@ -123,8 +149,7 @@ def update_html_with_spotlight_resources(q, attribute, res):
 			end= text[offset+ len(entity):]
 			offset_increase += len(header_s) + len(header_e)
 			text = start + middle + end
-		q[attribute]=text
-
+	return text
 
 def extract_entity_type(res):
 	kind = ""
