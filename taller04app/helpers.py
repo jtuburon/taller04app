@@ -52,7 +52,6 @@ def highlight_entities(q, ner_id):
 	if ner_id=="1":
 		words = generate_entities_dict(q);
 		if words != {}:
-			print words
 			regex= generate_pattern(words)
 			update_html(q, 'title', regex, words)
 			update_html(q, 'body', regex, words)
@@ -114,7 +113,6 @@ def update_html_with_spotlight_resources(q, attribute, res):
 			if res[attribute]!=None:
 				for a in res[attribute]:
 					answ= find_answer_object(q, a["answer_id"])
-					print answ
 					answ["body"]=generate_html_from_spotlight(answ, attribute, a)
 		else:
 			if 'Resources' in res[attribute].keys():
@@ -147,7 +145,7 @@ def generate_html_from_spotlight(obj, attribute, res):
 			extract_entity_type(r)
 
 			start= text[0:offset]
-			header_s="<strong><span style='color: "+ colors[extract_entity_type(r)] +"'>"
+			header_s="<strong><span onClick='javascript:load_resource_info(\""+entity_uri+"\")' style='color: "+ colors[extract_entity_type(r)] +"'>"
 			header_e="</span></strong>"
 			middle=header_s+  entity + header_e
 			end= text[offset+ len(entity):]
