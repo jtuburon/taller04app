@@ -20,6 +20,8 @@ colors = {
 	'PERCENT':'green',
 	'DATE':'magenta',
 	'TIME':'violet',
+	'MOVIE':'brown',
+	'OTHER':'gray',
 }
 
 def generate_entities_dict(q):
@@ -56,7 +58,7 @@ def highlight_entities(q, ner_id):
 			update_html(q, 'body', regex, words)
 			update_html(q, 'answers', regex, words)
 	elif ner_id=="2":
-		print "-"
+		get_spotlight_recognized_resources(q)
 
 
 
@@ -93,3 +95,44 @@ def retrieve_question_info(question_id, ner_id):
 		a['created_date']= datetime.fromtimestamp(a['creation_date']).strftime('%Y-%m-%d %H:%M:%S')	
 	highlight_entities(question, ner_id)
 	return question
+
+
+
+def get_spotlight_recognized_resources(q):
+	client = MongoClient(MONGO_DB_HOST, MONGO_DB_PORT)
+	my_db = client[MONGO_DB_NAME]
+	q_res= my_db.questions_spotlight_resources.find_one({"question_id": q['question_id']})
+	update_html_with_spotlight_resources(q, 'title', q_res)
+	
+
+def update_html_with_spotlight_resources(q, attribute, res):
+	if 'Resources' in res[attribute].keys():
+		offset_increase = 0
+		text= q[attribute]
+		for r in res[attribute]['Resources']:			
+			print r
+			entity= r["@surfaceForm"]
+			offset= int(r["@offset"]) + offset_increase
+			entity_uri= r["@URI"]
+			extract_entity_type(r)
+
+			start= text[0:offset]
+			header_s="<strong><span style='color: "+ colors[extract_entity_type(r)] +"'>"
+			header_e="</span></strong>"
+			middle=header_s+  entity + header_e
+			end= text[offset+ len(entity):]
+			offset_increase += len(header_s) + len(header_e)
+			text = start + middle + end
+		q[attribute]=text
+
+
+def extract_entity_type(res):
+	kind = ""
+	types= res["@types"].lower()
+	for k in colors.keys():
+		if k.lower() in types:
+			kind = k
+	if kind== "":
+		return "OTHER"
+	return kind
+
