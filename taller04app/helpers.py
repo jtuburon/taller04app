@@ -49,10 +49,10 @@ def generate_entities_dict(q):
 		return None
 
 def highlight_entities(q, ner_id):
-	print ner_id
 	if ner_id=="1":
 		words = generate_entities_dict(q);
-		if words != None:
+		if words != {}:
+			print words
 			regex= generate_pattern(words)
 			update_html(q, 'title', regex, words)
 			update_html(q, 'body', regex, words)
@@ -91,8 +91,9 @@ def retrieve_question_info(question_id, ner_id):
 	question= my_db.movies_questions.find_one({"question_id": int(question_id)});
 	question['created_date']= datetime.fromtimestamp(question['creation_date']).strftime('%Y-%m-%d %H:%M:%S')	
 	question['tags_array']= [x.encode('UTF8') for x in question['tags']] 	
-	for a in question['answers']:
-		a['created_date']= datetime.fromtimestamp(a['creation_date']).strftime('%Y-%m-%d %H:%M:%S')	
+	if "answers" in question.keys():
+		for a in question['answers']:
+			a['created_date']= datetime.fromtimestamp(a['creation_date']).strftime('%Y-%m-%d %H:%M:%S')	
 	highlight_entities(question, ner_id)
 	return question
 
@@ -110,10 +111,11 @@ def get_spotlight_recognized_resources(q):
 def update_html_with_spotlight_resources(q, attribute, res):
 	if attribute in res.keys():
 		if attribute =="answers":
-			for a in res[attribute]:
-				answ= find_answer_object(q, a["answer_id"])
-				print answ
-				answ["body"]=generate_html_from_spotlight(answ, attribute, a)
+			if res[attribute]!=None:
+				for a in res[attribute]:
+					answ= find_answer_object(q, a["answer_id"])
+					print answ
+					answ["body"]=generate_html_from_spotlight(answ, attribute, a)
 		else:
 			if 'Resources' in res[attribute].keys():
 				q[attribute]=generate_html_from_spotlight(q, attribute, res)
@@ -129,10 +131,12 @@ def generate_html_from_spotlight(obj, attribute, res):
 	sources=None
 	if attribute=="answers":
 		text= obj["body"]
-		sources= res['Resources']
+		if "Resources" in res.keys():
+			sources= res['Resources']
 	else:
 		text= obj[attribute]
-		sources= res[attribute]['Resources']
+		if "Resources" in res[attribute].keys():
+			sources= res[attribute]['Resources']
 	
 	offset_increase = 0
 	if sources != None:
