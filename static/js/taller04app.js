@@ -16,6 +16,7 @@ function refresh_question_info(question_id, ner_id){
 
 function load_resource_info(uri){
 	console.log(uri)
+	$('#resource_info_modal_content').html('');
 	$('#resource_info_modal_content').load('resource/info/'+ uri, function(){
 		if($('#myModal')){
 			$('#myModal').modal('show')

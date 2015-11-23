@@ -72,27 +72,30 @@ def question_detail_info(request, question_id, ner_id):
 	return render(request, 'taller04app/question_detail_info.html', context)
 
 def resource_info(request, uri):	
+	print uri
 	client = MongoClient(MONGO_DB_HOST, MONGO_DB_PORT)
 	my_db = client[MONGO_DB_NAME]
 	r = my_db.dbpedia_resources.find_one({"uri": uri})
-	print r
-	rels=[]
-	for t in r["tuples"]:
-		r_t= {"p": t["p"]["value"]}
-		print uri
-		print t["s"]["value"]
-		print "$$$$$$"
+	if r!=None:
+		rels=[]
+		for t in r["tuples"]:
+			r_t= {"p": t["p"]["value"]}
+			print uri
+			print t["s"]["value"]
+			print "$$$$$$"
 
-		if t["s"]["value"]== uri:
-			r_t["o"]= t["o"]["value"]
-		else:
-			r_t["o"]= t["s"]["value"]
-		rels.append(r_t)
-	res= {
-		"label": r["label"],
-		"uri": r["uri"],
-		"tuples": rels
-	}
+			if t["s"]["value"]== uri:
+				r_t["o"]= t["o"]["value"]
+			else:
+				r_t["o"]= t["s"]["value"]
+			rels.append(r_t)
+		res= {
+			"label": r["label"],
+			"uri": r["uri"],
+			"tuples": rels
+		}
+	else:
+		res= None
 	context = {"resource": res}
 	return render(request, 'taller04app/resource_info.html', context)
 

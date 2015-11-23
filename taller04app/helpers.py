@@ -24,11 +24,11 @@ colors = {
 	'OTHER':'gray',
 }
 
+client = MongoClient(MONGO_DB_HOST, MONGO_DB_PORT)
+my_db = client[MONGO_DB_NAME]
+	
 def generate_entities_dict(q):
-	client = MongoClient(MONGO_DB_HOST, MONGO_DB_PORT)
-	my_db = client[MONGO_DB_NAME]
 	q_entities= my_db.movies_questions_entities.find_one({"question_id": q['question_id']})
-
 	words = {}
 
 	if q_entities != None:	
@@ -74,10 +74,22 @@ def update_text(text, regex, words):
 	i = 0; 
 	output = ""
 	for m in regex.finditer(text):
-		output += "".join([text[i:m.start()], "<strong><span style='color: "+ colors[words[text[m.start():m.end()]]] + "'>", text[m.start():m.end()], "</span></strong>"])
+		entity_label= text[m.start():m.end()]
+		dbpedia_res= retrieve_dbpedia_resource(entity_label)
+		
+		if dbpedia_res!= None:
+			entity_uri=dbpedia_res["uri"]
+			output += "".join([text[i:m.start()], "<strong><span onClick='javascript:load_resource_info(\""+entity_uri+"\")' style='color: "+ colors[words[text[m.start():m.end()]]] + "'>", entity_label, "</span></strong>"])
+		else:
+			output += "".join([text[i:m.start()], "<strong><span style='color: "+ colors[words[text[m.start():m.end()]]] + "'>", entity_label, "</span></strong>"])
 		i = m.end()
 	output+= text[i:]
 	return output
+
+def retrieve_dbpedia_resource(res_label):
+	r = my_db.dbpedia_resources.find_one({"label": res_label})
+	return r
+
 
 def generate_pattern(words):
 	words_list = ["(\\b"+ x+ "\\b)" for x in words.keys()]
@@ -85,8 +97,6 @@ def generate_pattern(words):
 	return re.compile(regex)
 
 def retrieve_question_info(question_id, ner_id):	
-	client = MongoClient(MONGO_DB_HOST, MONGO_DB_PORT)
-	my_db = client[MONGO_DB_NAME]
 	question= my_db.movies_questions.find_one({"question_id": int(question_id)});
 	question['created_date']= datetime.fromtimestamp(question['creation_date']).strftime('%Y-%m-%d %H:%M:%S')	
 	question['tags_array']= [x.encode('UTF8') for x in question['tags']] 	
@@ -99,8 +109,6 @@ def retrieve_question_info(question_id, ner_id):
 
 
 def get_spotlight_recognized_resources(q):
-	client = MongoClient(MONGO_DB_HOST, MONGO_DB_PORT)
-	my_db = client[MONGO_DB_NAME]
 	q_res= my_db.questions_spotlight_resources.find_one({"question_id": q['question_id']})
 	update_html_with_spotlight_resources(q, 'title', q_res)
 	update_html_with_spotlight_resources(q, 'body', q_res)
