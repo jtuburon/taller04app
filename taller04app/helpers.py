@@ -179,3 +179,10 @@ def get_trending_topics(count):
 		topics_list.append(tag)
 	print len(topics_list)
 	return topics_list
+
+def get_places_in_questions():
+	geo_places_list=[]
+	places = my_db.places_in_dbpedia.find()
+	for p in places:
+		geo_places_list.append(p)
+	return geo_places_list

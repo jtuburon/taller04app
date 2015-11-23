@@ -77,3 +77,46 @@ function initTagsCloud(tags_data){
 		.text(function(d) { return d.text; });
 	}
 }
+
+function geoplaces_index(){	
+    $('#page-wrapper').load('geoplaces/index', function(){    	
+    	initMap();
+		$.ajax({
+		    type: "POST",
+		    url: "geoplaces/list",
+		    dataType: "json",
+		    timeout:  timeout, // in milliseconds
+		    success: function (geoData) {
+				draw_places_layer(geoData);
+		    },
+		    error: function (request, status, err) {
+		    }
+		});
+    });
+}
+
+function draw_places_layer(geoData){
+	console.log(geoData)
+	var markers = L.markerClusterGroup();
+	function onEachFeature(feature, layer) {
+		var popupContent = "<span><b>" + feature.label+ "</b><br>"
+		popupContent += "<p onClick='javascript:load_resource_info(\""+feature.uri+"\");'>" + feature.uri+ "</p></span>"
+		layer.bindPopup(popupContent, {maxWidth:800});
+	}
+
+	var layer = L.geoJson(geoData, 
+	{
+		onEachFeature: onEachFeature
+	});
+
+	markers.addLayer(layer);
+	map.addLayer(markers);	
+}
+
+
+var map = 0;
+function initMap(){
+	map = L.map('places_map').setView([4.60062, -74.12528], 2);
+	var googleLayer = new L.Google('ROADMAP');
+    map.addLayer(googleLayer);    
+}

@@ -11,4 +11,6 @@ urlpatterns = [
     url(r'^resource/info/(?P<uri>.+)$', views.resource_info, name='resource_info'),
     url(r'^tagcloud/index$', views.tagcloud_index, name='tagcloud_index'),
     url(r'^get_trending_topics$', views.list_trending_topics_tags, name='list_trending_topics_tags'),
+    url(r'^geoplaces/list$', views.list_geo_places, name='list_geo_places'),
+    url(r'^geoplaces/index$', views.geoplaces_index, name='geoplaces_index'),
 ]

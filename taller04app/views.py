@@ -115,3 +115,17 @@ def tagcloud_index(request):
 	topics_list= get_trending_topics(count)
 	context = {}
 	return render(request, 'taller04app/tagcloud_main.html', context)
+
+@csrf_exempt
+def list_geo_places(request):
+	geo_tweets_list= get_places_in_questions()
+	response = HttpResponse(dumps(geo_tweets_list))
+	response['content_type'] = 'application/json; charset=utf-8'
+	return response
+
+@csrf_exempt
+def geoplaces_index(request):
+	count= 250
+	topics_list= get_trending_topics(count)
+	context = {}
+	return render(request, 'taller04app/geoplaces_main.html', context)

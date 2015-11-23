@@ -31,6 +31,9 @@
     <!-- Custom Fonts -->
     <link href="../static/bower_components/font-awesome/css/font-awesome.min.css" rel="stylesheet" type="text/css">
 
+    <link rel="stylesheet" href="/static/dist/css/leaflet.css" />
+    <link rel="stylesheet" href="/static/dist/css/main.css" />
+
     <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
     <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
     <!--[if lt IE 9]>
@@ -66,6 +69,9 @@
                         <li>
                             <a href="javascript:tagcloud_index();"><i class="fa fa-table fa-fw"></i>TagCloud</a>
                         </li>
+                        <li>
+                            <a href="javascript:geoplaces_index();"><i class="fa fa-table fa-fw"></i>GeoPlaces</a>
+                        </li>
 
                     </ul>
                 </div>
@@ -99,7 +105,15 @@
     <script src="/static/js/d3.min.js"></script>
     <script type="text/javascript" src="/static/js/d3.layout.cloud.js"></script>
 
-    <script src="../static/dist/js/sb-admin-2.js"></script>
+      <script src="http://cdn.leafletjs.com/leaflet/v0.7.7/leaflet.js"></script>
+  <script src="http://maps.google.com/maps/api/js?v=3.2&sensor=false"></script>
+  <script src="http://matchingnotes.com/javascripts/leaflet-google.js"></script>
+
+  <link rel="stylesheet" href="/static/dist/css/MarkerCluster.css" />
+  <link rel="stylesheet" href="/static/dist/css/MarkerCluster.Default.css" />
+  <script src="/static/dist/js/leaflet.markercluster-src.js"></script>
+  <script src="../static/dist/js/sb-admin-2.js"></script>
+
 </body>
 
 </html>
