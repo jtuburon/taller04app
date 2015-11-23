@@ -5,7 +5,25 @@ function info_index(){
 }
 
 function questions_index(page){
-    $('#page-wrapper').load('questions/main/'+ page);
+    $('#page-wrapper').load('questions/main/'+ page, function(){
+        $('#search_field').bind("enterKey",function(e){
+           filter_questions();
+        });
+        $('#search_field').keyup(function(e){
+            if(e.keyCode == 13)
+            {
+                $(this).trigger("enterKey");
+            }
+        });
+    });
+}
+
+function filter_questions(){
+	var filter_type= $('#filter_type').val();
+	var filter_text= $('#search_field').val();
+	var page=1
+	data = {filter_type: filter_type, filter_text: filter_text, page: page}
+	$('#questions_div').load('questions/filter', data);
 }
 
 function question_detail(question_id, ner_id){

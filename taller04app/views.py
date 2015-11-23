@@ -61,6 +61,26 @@ def questions_main(request, page):
 	context = {"questions_list": questions}
 	return render(request, 'taller04app/questions_main.html', context)
 
+@csrf_exempt
+def questions_filter(request):
+	filter_type= int(request.POST.get('filter_type', '0'))
+	filter_text= request.POST.get('filter_text', '')
+	page= int(request.POST.get('page', '1'))
+
+	filter_p={}
+	if filter_type!=0:
+		if filter_type==1:
+			print ""
+		elif filter_type==2:
+			print ""
+		elif filter_type==3:
+			print ""
+		elif filter_type==4:
+			print ""
+
+	questions=[]	
+	context = {"questions_list": questions}
+	return render(request, 'taller04app/questions_list.html', context)
 
 def question_detail(request, question_id, ner_id):	
 	question= retrieve_question_info(question_id, ner_id)

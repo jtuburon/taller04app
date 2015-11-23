@@ -1,9 +1,39 @@
 <div class="row">
     <div class="col-lg-12">
-        <h1 class="page-header">Listado de Preguntas</h1>
+        <h1 class="page-header">Questions' List</h1>
     </div>
 </div>
-
-<div id="teachers_div" class="row">
+<div class="panel panel-default">
+    <div class="panel-heading">
+        <i class="fa fa-bar-chart-o fa-fw"></i> Filtering Options:
+    </div>
+    <div class="form-group">
+        <div class="row">
+		  <div class="col-lg-4">
+		    <div class="input-group">
+		      <span class="input-group-addon">
+		      	Filter Type  
+		      </span>
+		      <select id="filter_type" class="form-control">
+		            <option value="0">All</option>
+		            <option value="1">Place</option>
+		            <option value="2">Person</option>
+		            <option value="3">Organization</option>
+		            <option value="4">Tags</option>
+		      </select>
+		    </div><!-- /input-group -->
+		  </div><!-- /.col-lg-6 -->
+		  <div class="col-lg-8">
+		    <div class="input-group">
+		      <span class="input-group-addon">
+		        Search
+		      </span>
+		      <input id="search_field" type="text" class="form-control" aria-label="...">
+		    </div><!-- /input-group -->
+		  </div><!-- /.col-lg-6 -->
+		</div><!-- /.row -->
+    </div>
+</div>
+<div id="questions_div" class="row">
     {% include "taller04app/questions_list.html" %}
 </div>
