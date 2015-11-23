@@ -9,4 +9,6 @@ urlpatterns = [
     url(r'^question/detail/(?P<question_id>[0-9]+)/(?P<ner_id>[0-9]+)$', views.question_detail, name='question_detail'),
     url(r'^question/detail/info/(?P<question_id>[0-9]+)/(?P<ner_id>[0-9]+)$', views.question_detail_info, name='question_detail_info'),
     url(r'^resource/info/(?P<uri>.+)$', views.resource_info, name='resource_info'),
+    url(r'^tagcloud/index$', views.tagcloud_index, name='tagcloud_index'),
+    url(r'^get_trending_topics$', views.list_trending_topics_tags, name='list_trending_topics_tags'),
 ]

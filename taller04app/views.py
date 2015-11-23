@@ -1,5 +1,6 @@
 from django.http import HttpResponse
 from django.shortcuts import render
+from django.views.decorators.csrf import csrf_exempt
 
 from bson.son import SON
 from pymongo import MongoClient 
@@ -100,3 +101,17 @@ def resource_info(request, uri):
 	return render(request, 'taller04app/resource_info.html', context)
 
 
+@csrf_exempt
+def list_trending_topics_tags(request):
+	count= 250
+	topics_list= get_trending_topics(count)
+	response = HttpResponse(dumps(topics_list))
+	response['content_type'] = 'application/json; charset=utf-8'
+	return response
+
+@csrf_exempt
+def tagcloud_index(request):
+	count= 250
+	topics_list= get_trending_topics(count)
+	context = {}
+	return render(request, 'taller04app/tagcloud_main.html', context)

@@ -171,3 +171,11 @@ def extract_entity_type(res):
 		return "OTHER"
 	return kind
 
+def get_trending_topics(count):
+	topics_list=[]
+	topics = my_db.movies_trending_topics.find().sort([('count', -1)]).limit(count)
+	for topic in topics:
+		tag ={"text": topic['word'], "size": 15 + topic['count']/100}
+		topics_list.append(tag)
+	print len(topics_list)
+	return topics_list
