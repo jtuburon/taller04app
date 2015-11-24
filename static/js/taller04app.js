@@ -4,8 +4,8 @@ function info_index(){
     $('#page-wrapper').load('info/main');
 }
 
-function questions_index(page){
-    $('#page-wrapper').load('questions/main/'+ page, function(){
+function questions_index(){
+    $('#page-wrapper').load('questions/main', function(){
         $('#search_field').bind("enterKey",function(e){
            filter_questions();
         });
@@ -15,13 +15,14 @@ function questions_index(page){
                 $(this).trigger("enterKey");
             }
         });
+        filter_questions(1);
     });
 }
 
-function filter_questions(){
+function filter_questions(page){
 	var filter_type= $('#filter_type').val();
 	var filter_text= $('#search_field').val();
-	var page=1
+	
 	data = {filter_type: filter_type, filter_text: filter_text, page: page}
 	$('#questions_div').load('questions/filter', data);
 }

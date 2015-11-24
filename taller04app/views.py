@@ -9,6 +9,7 @@ from bson.json_util import dumps
 from datetime import datetime
 
 from helpers import *
+import re
 
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 
@@ -40,25 +41,8 @@ def show_info(request):
 	context = {}
 	return render(request, 'taller04app/info_main.html', context)
 
-def questions_main(request, page):
-	client = MongoClient(MONGO_DB_HOST, MONGO_DB_PORT)
-	my_db = client[MONGO_DB_NAME]
-	
-	questions_list=my_db.movies_questions.find().sort("creation_date", -1);
-	paginator = Paginator(questions_list, 10) # Show 25 contacts per page
-
-	try:
-		questions = paginator.page(page)
-	except PageNotAnInteger:
-		questions = paginator.page(1)
-	except EmptyPage:
-		questions = paginator.page(paginator.num_pages)
-
-	for q in questions:
-		q['created_date']= datetime.fromtimestamp(q['creation_date']).strftime('%Y-%m-%d %H:%M:%S')	
-		q['tags_array']= [x.encode('UTF8') for x in q['tags']] 
-
-	context = {"questions_list": questions}
+def questions_main(request):
+	context = {}
 	return render(request, 'taller04app/questions_main.html', context)
 
 @csrf_exempt
@@ -67,18 +51,39 @@ def questions_filter(request):
 	filter_text= request.POST.get('filter_text', '')
 	page= int(request.POST.get('page', '1'))
 
+    #0"All
+    #1"Place
+    #2"Person
+    #3"Organization
+    #4"Tags
+
 	filter_p={}
 	if filter_type!=0:
+		pattern= re.compile(filter_text, re.IGNORECASE)
+		filters_list=[]
 		if filter_type==1:
-			print ""
+			filter_field="title_entities.LOCATION"
+			filters_list.append({filter_field: pattern})
+			filter_field="body_entities.LOCATION"
+			filters_list.append({filter_field: pattern})
 		elif filter_type==2:
-			print ""
+			filter_field="title_entities.PERSON"
+			filters_list.append({filter_field: pattern})
+			filter_field="body_entities.PERSON"
+			filters_list.append({filter_field: pattern})
+		
 		elif filter_type==3:
-			print ""
+			filter_field="title_entities.ORGANIZATION"
+			filters_list.append({filter_field: pattern})
+			filter_field="body_entities.ORGANIZATION"
+			filters_list.append({filter_field: pattern})
 		elif filter_type==4:
 			print ""
 
-	questions=[]	
+		filter_p= {"$or": filters_list}
+		
+	questions= get_questions_with_filter(filter_p, page)
+
 	context = {"questions_list": questions}
 	return render(request, 'taller04app/questions_list.html', context)
 

@@ -6,7 +6,7 @@
       <ul class="pagination">
         <li>
           {% if questions_list.has_previous %}
-          <a href="javascript:questions_index({{ questions_list.previous_page_number }})" aria-label="Previous">
+          <a href="javascript:filter_questions({{ questions_list.previous_page_number }})" aria-label="Previous">
             <span aria-hidden="true">&laquo;</span>
           </a>
           {% else %}
@@ -18,7 +18,7 @@
             </span></li>
         <li>
           {% if questions_list.has_next %}
-          <a href="javascript:questions_index({{ questions_list.next_page_number }})" aria-label="Next">
+          <a href="javascript:filter_questions({{ questions_list.next_page_number }})" aria-label="Next">
             <span aria-hidden="true">&raquo;</span>
           </a>
           {% else %}
