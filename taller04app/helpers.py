@@ -55,6 +55,7 @@ def get_questions_with_filter(filter_type, filter_p, page):
 	for q in questions:
 		q['created_date']= datetime.fromtimestamp(q['creation_date']).strftime('%Y-%m-%d %H:%M:%S')	
 		q['tags_array']= [x.encode('UTF8') for x in q['tags']] 	
+	client.close()	
 	return questions
 
 def generate_entities_dict(q):
@@ -88,7 +89,7 @@ def highlight_entities(q, ner_id):
 			update_html(q, 'answers', regex, words)
 	elif ner_id=="2":
 		get_spotlight_recognized_resources(q)
-
+	client.close()	
 
 
 def update_html(q, attribute, regex, words):
@@ -208,7 +209,7 @@ def get_trending_topics(count):
 	for topic in topics:
 		tag ={"text": topic['word'], "size": 15 + topic['count']/100}
 		topics_list.append(tag)
-	print len(topics_list)
+	client.close()	
 	return topics_list
 
 def get_places_in_questions():
@@ -216,4 +217,5 @@ def get_places_in_questions():
 	places = my_db.places_in_dbpedia.find()
 	for p in places:
 		geo_places_list.append(p)
+	client.close()	
 	return geo_places_list
