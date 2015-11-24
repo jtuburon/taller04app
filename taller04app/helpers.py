@@ -29,14 +29,17 @@ colors = {
 client = MongoClient(MONGO_DB_HOST, MONGO_DB_PORT)
 my_db = client[MONGO_DB_NAME]
 
-def get_questions_with_filter(filter_p, page):
+def get_questions_with_filter(filter_type, filter_p, page):
 	questions = []
 	if len(filter_p.keys())>0:
-		q_ids = []
-		q_entities= my_db.movies_questions_entities.find(filter_p, {"question_id": 1})
-		for q_e in q_entities:
-			q_ids.append(q_e["question_id"])	
-		questions_list=my_db.movies_questions.find({"question_id": {"$in": q_ids}}).sort("creation_date", -1);
+		if filter_type == 4:
+			questions_list=my_db.movies_questions.find(filter_p).sort("creation_date", -1);		
+		else:
+			q_ids = []
+			q_entities= my_db.movies_questions_entities.find(filter_p, {"question_id": 1})
+			for q_e in q_entities:
+				q_ids.append(q_e["question_id"])	
+			questions_list=my_db.movies_questions.find({"question_id": {"$in": q_ids}}).sort("creation_date", -1);
 	else:
 		questions_list=my_db.movies_questions.find().sort("creation_date", -1);		
 	

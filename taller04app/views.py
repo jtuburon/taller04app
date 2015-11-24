@@ -78,11 +78,12 @@ def questions_filter(request):
 			filter_field="body_entities.ORGANIZATION"
 			filters_list.append({filter_field: pattern})
 		elif filter_type==4:
-			print ""
+			filter_field="tags"
+			filters_list.append({filter_field: pattern})
 
 		filter_p= {"$or": filters_list}
 		
-	questions= get_questions_with_filter(filter_p, page)
+	questions= get_questions_with_filter(filter_type, filter_p, page)
 
 	context = {"questions_list": questions}
 	return render(request, 'taller04app/questions_list.html', context)
