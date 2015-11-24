@@ -66,16 +66,22 @@ def questions_filter(request):
 			filters_list.append({filter_field: pattern})
 			filter_field="body_entities.LOCATION"
 			filters_list.append({filter_field: pattern})
+			filter_field="answers_entities.entities.LOCATION"
+			filters_list.append({filter_field: pattern})
 		elif filter_type==2:
 			filter_field="title_entities.PERSON"
 			filters_list.append({filter_field: pattern})
 			filter_field="body_entities.PERSON"
+			filters_list.append({filter_field: pattern})
+			filter_field="answers_entities.entities.PERSON"
 			filters_list.append({filter_field: pattern})
 		
 		elif filter_type==3:
 			filter_field="title_entities.ORGANIZATION"
 			filters_list.append({filter_field: pattern})
 			filter_field="body_entities.ORGANIZATION"
+			filters_list.append({filter_field: pattern})
+			filter_field="answers_entities.entities.ORGANIZATION"
 			filters_list.append({filter_field: pattern})
 		elif filter_type==4:
 			filter_field="tags"
