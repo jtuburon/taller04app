@@ -32,7 +32,7 @@ my_db = client[MONGO_DB_NAME]
 def get_questions_with_filter(filter_type, filter_p, page):
 	questions = []
 	if len(filter_p.keys())>0:
-		if filter_type == 4:
+		if filter_type == 0 or filter_type == 4:
 			questions_list=my_db.movies_questions.find(filter_p).sort("creation_date", -1);		
 		else:
 			q_ids = []

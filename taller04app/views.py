@@ -58,36 +58,43 @@ def questions_filter(request):
     #4"Tags
 
 	filter_p={}
-	if filter_type!=0:
-		pattern= re.compile(filter_text, re.IGNORECASE)
-		filters_list=[]
-		if filter_type==1:
-			filter_field="title_entities.LOCATION"
-			filters_list.append({filter_field: pattern})
-			filter_field="body_entities.LOCATION"
-			filters_list.append({filter_field: pattern})
-			filter_field="answers_entities.entities.LOCATION"
-			filters_list.append({filter_field: pattern})
-		elif filter_type==2:
-			filter_field="title_entities.PERSON"
-			filters_list.append({filter_field: pattern})
-			filter_field="body_entities.PERSON"
-			filters_list.append({filter_field: pattern})
-			filter_field="answers_entities.entities.PERSON"
-			filters_list.append({filter_field: pattern})
-		
-		elif filter_type==3:
-			filter_field="title_entities.ORGANIZATION"
-			filters_list.append({filter_field: pattern})
-			filter_field="body_entities.ORGANIZATION"
-			filters_list.append({filter_field: pattern})
-			filter_field="answers_entities.entities.ORGANIZATION"
-			filters_list.append({filter_field: pattern})
-		elif filter_type==4:
-			filter_field="tags"
-			filters_list.append({filter_field: pattern})
 
-		filter_p= {"$or": filters_list}
+	pattern= re.compile(filter_text, re.IGNORECASE)
+	filters_list=[]
+	if filter_type==0:
+		filter_field="title"
+		filters_list.append({filter_field: pattern})
+		filter_field="body"
+		filters_list.append({filter_field: pattern})
+		filter_field="answers.body"
+		filters_list.append({filter_field: pattern})
+	elif filter_type==1:
+		filter_field="title_entities.LOCATION"
+		filters_list.append({filter_field: pattern})
+		filter_field="body_entities.LOCATION"
+		filters_list.append({filter_field: pattern})
+		filter_field="answers_entities.entities.LOCATION"
+		filters_list.append({filter_field: pattern})
+	elif filter_type==2:
+		filter_field="title_entities.PERSON"
+		filters_list.append({filter_field: pattern})
+		filter_field="body_entities.PERSON"
+		filters_list.append({filter_field: pattern})
+		filter_field="answers_entities.entities.PERSON"
+		filters_list.append({filter_field: pattern})
+	
+	elif filter_type==3:
+		filter_field="title_entities.ORGANIZATION"
+		filters_list.append({filter_field: pattern})
+		filter_field="body_entities.ORGANIZATION"
+		filters_list.append({filter_field: pattern})
+		filter_field="answers_entities.entities.ORGANIZATION"
+		filters_list.append({filter_field: pattern})
+	elif filter_type==4:
+		filter_field="tags"
+		filters_list.append({filter_field: pattern})
+
+	filter_p= {"$or": filters_list}
 		
 	questions= get_questions_with_filter(filter_type, filter_p, page)
 
